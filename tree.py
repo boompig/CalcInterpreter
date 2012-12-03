@@ -29,6 +29,11 @@ class Tree():
 			root = root.parent
 		return root
 
+	def is_root(self):
+		'''Return whether this tree has no parent trees.'''
+
+		return self.parent is None
+
 	def draw(self, num_tabs=0):
 		'''Draw the tree in ASCII. Tree is drawn with root in top-left, and should be viewed from the side.'''
 
@@ -48,11 +53,6 @@ class Tree():
 		May be that it is a single-node tree.'''
 
 		return self.left is None and self.right is None
-
-	def is_root(self):
-		'''Return whether this tree has no parent trees.'''
-
-		return self.parent is None
 
 	def is_full(self):
 		'''Return True iff all VALID branches of this tree are attached to subtrees.'''
