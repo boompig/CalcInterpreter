@@ -3,11 +3,6 @@
 #	December 03 2012		#
 #############################
 
-#############################
-#	Written by Daniel Kats	#
-#	November 29 2012		#
-#############################
-
 from tree import SyntaxTree
 from Queue import Queue
 from sys import stderr, argv
@@ -279,7 +274,6 @@ def interpret_loop():
 	Print the banner at the beginning.'''
 
 	i = Interpreter()
-
 	print_banner()
 	print "Type 'quit' or 'exit' to stop the interpreter"
 	line = ""
