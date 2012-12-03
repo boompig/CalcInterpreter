@@ -1,10 +1,16 @@
 #############################
 #	Written by Daniel Kats	#
+#	December 03 2012		#
+#############################
+
+#############################
+#	Written by Daniel Kats	#
 #	November 29 2012		#
 #############################
 
 from tree import SyntaxTree
 from Queue import Queue
+from sys import stderr, argv
 import operator
 
 class InterpreterException(Exception):
@@ -26,7 +32,7 @@ class Interpreter():
 	Standard grammar (a bit informal):
 	BinOp = {'+', '-', '*', '/', '^'}
 	UnaryOp = {'+', '-'}
-	Var = [a-zA-Z][a-zA-Z0-9]*
+	Var = [a-zA-Z]([a-zA-Z0-9] | '.')*
 	Number = [+-]?([0-9]+
 
 	Literal = (Var | Number)
@@ -123,6 +129,8 @@ class Interpreter():
 			v = root.val
 			if v.isdigit():
 				return int(v)
+			elif v.count(".") == 1 and v.replace(".", "").isdigit():
+				return float(v)
 			elif v in self._vars:
 				return self._vars[v]
 			else:
@@ -159,7 +167,7 @@ class Interpreter():
 		while not token_queue.empty() > 0:
 			token = token_queue.get()
 
-			if token.isalnum():
+			if token.replace(".", "").isalnum():
 				# literals are leaves.
 				if active_tree is None:
 					active_tree = SyntaxTree(token)
@@ -216,6 +224,7 @@ class Interpreter():
 		tokens = Queue()
 		buffer = ""
 		isVar = False
+		isFloat = False # not really used
 
 		for c in expr:
 			if c.isalpha():
@@ -228,6 +237,10 @@ class Interpreter():
 			elif c.isdigit():
 				# it doesn't matter if var or number 
 				buffer += c
+			elif c == ".":
+				buffer += c
+				isVar = False 
+				isFloat = True
 			else:
 				# these are operators of all sorts, brackets, whitespace
 				if len(buffer) > 0:
@@ -246,10 +259,25 @@ class Interpreter():
 
 
 def print_banner():
+	'''Print vanity banner.'''
+
 	print "Calculator Interpreter version 0.2"
 	print "Written by Daniel Kats"
 
-def interpret():
+def interpret(i, expr):
+	'''Interpret expression expr using interpreter i. Print result to stdout.'''
+
+	try:
+		v = i.eval(expr)
+		if v is not None:
+			print v
+	except InterpreterException as e:
+		print "Error: %s" % e.message
+
+def interpret_loop():
+	'''Run a readline loop, and feed lines into interpreter.
+	Print the banner at the beginning.'''
+
 	i = Interpreter()
 
 	print_banner()
@@ -258,15 +286,18 @@ def interpret():
 
 	while line not in ["quit", "exit"]:
 		if len(line) > 0:
-			try:
-				v = i.eval(line)
-				if v is not None:
-					print v
-			except InterpreterException as e:
-				print "Error: %s" % e.message
+			interpret(i, line)
 		line = raw_input("> ")
 
 	print "Bye :)"
 
 if __name__ == "__main__":
-	interpret()
+	if "-c" in argv and len(argv) > (argv.index("-c") + 1):
+		# allow direct passing of expressions without opening interpreter shell
+		input = argv[argv.index("-c") + 1]
+		i = Interpreter()
+
+		for expr in input.split(";"):
+			interpret(i, expr)
+	else:
+		interpret_loop()
