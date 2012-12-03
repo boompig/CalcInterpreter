@@ -89,7 +89,8 @@ def interpret(i, expr, standalone=True):
 		else:
 			print "ERROR: %s" % ie.message
 
-if __name__ == "__main__":
+def main():
+	'''Main method. Put in method so can be exported.'''
 	i = Interpreter()
 
 	#TODO cleaner argument parsing
@@ -101,3 +102,6 @@ if __name__ == "__main__":
 		# just a bit of main loop stuff
 		cli = CalcInterpreterCLI(i)
 		cli.cmdloop()
+
+if __name__ == "__main__":
+	main()
