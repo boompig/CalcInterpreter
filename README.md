@@ -7,7 +7,7 @@ Uses Abstract Syntax Trees (kind of).
 Preserves order of operations
 Has some syntactic sugar that you would expect.
 
-= Operations =
+## Operations
 
 - basic arithmetic
 - exponents
@@ -16,14 +16,14 @@ Has some syntactic sugar that you would expect.
 - assign variables
 - factoring (slow on purpose) 
 
-= Parallelization = 
+## Parallelization 
 
 Possibly the most interesting feature: the interpreter performs unrelated operations in parallel. This is verifiable via the very slow factoring operation and the timing module included.
 
 Level of parallelization should be quite high, though a large-enough expression (many operands) might cause the threading to crash the computer (not sure about this). Works by parallelizing the evaluation of each subtree (obv. subtrees are unrelated).
 
 
-= Future Enhancements =
+## Future Enhancements
 
 - Does not (yet) support constants, trig, etc.
 
